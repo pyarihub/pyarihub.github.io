@@ -57,6 +57,7 @@ var ChartHelperServiceService = /** @class */ (function () {
             };
             return obj;
         })).subscribe(function (val) { return data.push(val); });
+        debugger;
         return data;
     };
     ChartHelperServiceService.prototype.getRandomColor = function () {
@@ -70,6 +71,52 @@ var ChartHelperServiceService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], ChartHelperServiceService);
     return ChartHelperServiceService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/Services/commbank-transactionservice.ts":
+/*!*********************************************************!*\
+  !*** ./src/app/Services/commbank-transactionservice.ts ***!
+  \*********************************************************/
+/*! exports provided: CommbankTransactionService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CommbankTransactionService", function() { return CommbankTransactionService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var CommbankTransactionService = /** @class */ (function () {
+    function CommbankTransactionService() {
+    }
+    CommbankTransactionService.prototype.getTransactions = function (data) {
+        var lines = data.split('\n');
+        var result = [];
+        for (var i = 0; i < lines.length - 1; i++) {
+            var currentline = lines[i].split(",");
+            var amount1 = currentline[1].slice(2);
+            amount1 = amount1.slice(0, amount1.length - 1);
+            result.push({
+                date: currentline[0],
+                item: currentline[2],
+                amount: amount1
+            });
+        }
+        debugger;
+        return result;
+    };
+    CommbankTransactionService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], CommbankTransactionService);
+    return CommbankTransactionService;
 }());
 
 
@@ -133,6 +180,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _file_service_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-service.service */ "./src/app/Services/file-service.service.ts");
+/* harmony import */ var _commbank_transactionservice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./commbank-transactionservice */ "./src/app/Services/commbank-transactionservice.ts");
+
 
 
 
@@ -140,7 +189,11 @@ var TransactionServiceFactoryService = /** @class */ (function () {
     function TransactionServiceFactoryService() {
     }
     TransactionServiceFactoryService.prototype.getTransactionService = function (bank) {
-        return new _file_service_service__WEBPACK_IMPORTED_MODULE_2__["WespacTransactionService"]();
+        debugger;
+        if (bank === "cwb")
+            return new _commbank_transactionservice__WEBPACK_IMPORTED_MODULE_3__["CommbankTransactionService"]();
+        else
+            return new _file_service_service__WEBPACK_IMPORTED_MODULE_2__["WespacTransactionService"]();
     };
     TransactionServiceFactoryService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -195,7 +248,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div class=\"form-group\">\r\n      <div class=\"row\">\r\n        <hr>\r\n        <div class=\"input-group mb-3 col-md-4\">\r\n          <div class=\"input-group-prepend\">\r\n            <span class=\"input-group-text\">Upload the CSV</span>\r\n          </div>\r\n          <div class=\"custom-file\">\r\n            <input type=\"file\" class=\"custom-file-input\" (change)=\"onFileSelected($event.target.files)\"\r\n              id=\" inputGroupFile01\">\r\n            <label class=\"custom-file-label\" for=\"inputGroupFile01\">Choose file</label>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"input group  mb-3 col-md-4\">\r\n          <div class=\"custom-control custom-checkbox\">\r\n            <input [(ngModel)]=\"options.legend.display\" type=\"checkbox\" class=\"custom-control-input\"\r\n              (change)=\"refreshData()\" id=\"customCheck1\">\r\n            <label class=\"custom-control-label\" for=\"customCheck1\">Show Legends</label>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"chart-container\" style=\"height:40vh; width:80vw\">\r\n          <p-chart type=\"bar\" [options]=\"options\" [data]=\"data\"></p-chart>\r\n        </div>\r\n      </div>\r\n\r\n    </div>\r\n\r\n  </div>\r\n\r\n</div>"
+module.exports = "<div class=\"container\">\r\n  \r\n     \r\n      <div class=\"row\">\r\n        <div class=\"paymentWrap input-group col-md-8\">\r\n          <div class=\"btn-group paymentBtnGroup btn-group-justified\" data-toggle=\"buttons\">\r\n            <label style=\"margin-right: 30px; margin-top:30px; padding: 10px; \">Select your bank: </label>\r\n            <label class=\"btn paymentMethod active\">\r\n              <div (click)='selectBank(\"wespac\")' class=\"method wespac\"></div>\r\n              <input type=\"radio\" name=\"options\" checked>\r\n            </label>\r\n            <label class=\"btn paymentMethod\">\r\n              <div (click)='selectBank(\"cwb\")' class=\"method cwb\"></div>\r\n              <input type=\"radio\"  name=\"options\">\r\n            </label>\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      \r\n      <div class=\"row\">\r\n          <hr>\r\n          <div class=\"input-group col-md-8\">\r\n            <div class=\"input-group-prepend\">\r\n              <span class=\"input-group-text\">Upload the CSV</span>\r\n            </div>\r\n            <div class=\"custom-file\">\r\n              <input type=\"file\" class=\"custom-file-input\" (change)=\"onFileSelected($event.target.files)\"\r\n                id=\" inputGroupFile01\">\r\n              <label class=\"custom-file-label\" for=\"inputGroupFile01\">Choose file</label>\r\n            </div>\r\n          </div>\r\n  \r\n          <div class=\"input group  mb-3 col-md-3\">\r\n            <div class=\"custom-control custom-checkbox\">\r\n              <input [(ngModel)]=\"options.legend.display\" type=\"checkbox\" class=\"custom-control-input\"\r\n                (change)=\"refreshData()\" id=\"customCheck1\">\r\n              <label class=\"custom-control-label\" for=\"customCheck1\">Show Legends</label>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      <div class=\"row\">\r\n        <div class=\"chart-container\" style=\" margin-top: 20px;  height:40vh; width:80vw\">\r\n          <p-chart type=\"bar\" [options]=\"options\" [data]=\"data\"></p-chart>\r\n        </div>\r\n      </div>\r\n\r\n    </div>\r\n\r\n "
 
 /***/ }),
 
@@ -206,7 +259,7 @@ module.exports = "<div class=\"container\">\r\n  <div class=\"row\">\r\n    <div
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuc2NzcyJ9 */"
+module.exports = ".paymentWrap {\n  padding: 50px; }\n\n.paymentWrap .paymentBtnGroup {\n  max-width: 400px;\n  margin: auto; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod {\n  padding: 40px;\n  box-shadow: none;\n  position: relative; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod.active {\n  outline: none !important; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod.active .method {\n  border-color: #4cd264;\n  outline: none !important;\n  box-shadow: 0px 3px 22px 0px #7b7b7b; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod .method {\n  position: absolute;\n  right: 3px;\n  top: 3px;\n  bottom: 3px;\n  left: 3px;\n  background-size: contain;\n  background-position: center;\n  background-repeat: no-repeat;\n  border: 2px solid transparent;\n  transition: all 0.5s;\n  width: 70%;\n  height: 70%; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod .method.wespac {\n  background-image: url('wespac.png');\n  background-size: contain;\n  background-repeat: no-repeat; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod .method.cwb {\n  background-image: url('cwb.gif');\n  background-size: contain;\n  background-repeat: no-repeat; }\n\n.paymentWrap .paymentBtnGroup .paymentMethod .method:hover {\n  border-color: #4cd264;\n  outline: none !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9EOlxceHBlbnNcXHNyYy9hcHBcXGFwcC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNDLGFBQWEsRUFBQTs7QUFHZDtFQUNDLGdCQUFnQjtFQUNoQixZQUFZLEVBQUE7O0FBR2I7RUFDQyxhQUFhO0VBQ2IsZ0JBQWdCO0VBQ2hCLGtCQUFrQixFQUFBOztBQUduQjtFQUNDLHdCQUF3QixFQUFBOztBQUd6QjtFQUNDLHFCQUFxQjtFQUNyQix3QkFBd0I7RUFDeEIsb0NBQW9DLEVBQUE7O0FBR3JDO0VBQ0Msa0JBQWtCO0VBQ2xCLFVBQVU7RUFDVixRQUFRO0VBQ1IsV0FBVztFQUNYLFNBQVM7RUFDVCx3QkFBd0I7RUFDeEIsMkJBQTJCO0VBQzNCLDRCQUE0QjtFQUM1Qiw2QkFBNkI7RUFDMUIsb0JBQW9CO0VBQ3BCLFVBQVU7RUFDVixXQUFZLEVBQUE7O0FBR2hCO0VBQ0ksbUNBQXNEO0VBQ3RELHdCQUF3QjtFQUN4Qiw0QkFBNEIsRUFBQTs7QUFHaEM7RUFDSSxnQ0FBbUQ7RUFDbkQsd0JBQXdCO0VBQ3hCLDRCQUE0QixFQUFBOztBQUtoQztFQUNDLHFCQUFxQjtFQUNyQix3QkFBd0IsRUFBQSIsImZpbGUiOiJhcHAvYXBwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnBheW1lbnRXcmFwIHtcclxuXHRwYWRkaW5nOiA1MHB4O1xyXG59XHJcblxyXG4ucGF5bWVudFdyYXAgLnBheW1lbnRCdG5Hcm91cCB7XHJcblx0bWF4LXdpZHRoOiA0MDBweDtcclxuXHRtYXJnaW46IGF1dG87XHJcbn1cclxuXHJcbi5wYXltZW50V3JhcCAucGF5bWVudEJ0bkdyb3VwIC5wYXltZW50TWV0aG9kIHtcclxuXHRwYWRkaW5nOiA0MHB4O1xyXG5cdGJveC1zaGFkb3c6IG5vbmU7XHJcblx0cG9zaXRpb246IHJlbGF0aXZlO1xyXG59XHJcblxyXG4ucGF5bWVudFdyYXAgLnBheW1lbnRCdG5Hcm91cCAucGF5bWVudE1ldGhvZC5hY3RpdmUge1xyXG5cdG91dGxpbmU6IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuLnBheW1lbnRXcmFwIC5wYXltZW50QnRuR3JvdXAgLnBheW1lbnRNZXRob2QuYWN0aXZlIC5tZXRob2Qge1xyXG5cdGJvcmRlci1jb2xvcjogIzRjZDI2NDtcclxuXHRvdXRsaW5lOiBub25lICFpbXBvcnRhbnQ7XHJcblx0Ym94LXNoYWRvdzogMHB4IDNweCAyMnB4IDBweCAjN2I3YjdiO1xyXG59XHJcblxyXG4ucGF5bWVudFdyYXAgLnBheW1lbnRCdG5Hcm91cCAucGF5bWVudE1ldGhvZCAubWV0aG9kIHtcclxuXHRwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0cmlnaHQ6IDNweDtcclxuXHR0b3A6IDNweDtcclxuXHRib3R0b206IDNweDtcclxuXHRsZWZ0OiAzcHg7XHJcblx0YmFja2dyb3VuZC1zaXplOiBjb250YWluO1xyXG5cdGJhY2tncm91bmQtcG9zaXRpb246IGNlbnRlcjtcclxuXHRiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xyXG5cdGJvcmRlcjogMnB4IHNvbGlkIHRyYW5zcGFyZW50O1xyXG4gICAgdHJhbnNpdGlvbjogYWxsIDAuNXM7XHJcbiAgICB3aWR0aDogNzAlO1xyXG4gICAgaGVpZ2h0OiAgNzAlO1xyXG59XHJcblxyXG4ucGF5bWVudFdyYXAgLnBheW1lbnRCdG5Hcm91cCAucGF5bWVudE1ldGhvZCAubWV0aG9kLndlc3BhYyB7XHJcbiAgICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoJy4uXFxcXGFzc2V0c1xcXFxiYW5rc1xcXFx3ZXNwYWMucG5nJyk7XHJcbiAgICBiYWNrZ3JvdW5kLXNpemU6IGNvbnRhaW47XHJcbiAgICBiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xyXG59XHJcblxyXG4ucGF5bWVudFdyYXAgLnBheW1lbnRCdG5Hcm91cCAucGF5bWVudE1ldGhvZCAubWV0aG9kLmN3YiB7XHJcbiAgICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoJy4uXFxcXGFzc2V0c1xcXFxiYW5rc1xcXFxjd2IuZ2lmJyk7XHJcbiAgICBiYWNrZ3JvdW5kLXNpemU6IGNvbnRhaW47XHJcbiAgICBiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xyXG59XHJcblxyXG5cclxuXHJcbi5wYXltZW50V3JhcCAucGF5bWVudEJ0bkdyb3VwIC5wYXltZW50TWV0aG9kIC5tZXRob2Q6aG92ZXIge1xyXG5cdGJvcmRlci1jb2xvcjogIzRjZDI2NDtcclxuXHRvdXRsaW5lOiBub25lICFpbXBvcnRhbnQ7XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -278,8 +331,11 @@ var AppComponent = /** @class */ (function () {
             };
         }
     };
+    AppComponent.prototype.selectBank = function (bank) {
+        this.bank = bank;
+    };
     AppComponent.prototype.setChartData = function (fileContent) {
-        var transactions = this.transactionServiceFactory.getTransactionService('wespac').getTransactions(fileContent);
+        var transactions = this.transactionServiceFactory.getTransactionService(this.bank).getTransactions(fileContent);
         this.data = {
             labels: ['January'],
             datasets: this.charthelperService.ToDataSet(transactions)
